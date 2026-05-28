@@ -13,6 +13,11 @@ df["pickup_time"] = pd.to_datetime(df["pickup_time"])
 df["hour"] = df["pickup_time"].dt.hour
 df["day_of_week"] = df["pickup_time"].dt.day_name()
 
+# print out some cool data points 
+print("Highest fare:", df["fare_amount"].max()) #highest fare
+print("Lowest fare:", df["fare_amount"].min()) #lowest fare
+print("Average fare:", df["fare_amount"].mean().round(2)) #average fare
+
 os.makedirs("outputs", exist_ok=True)
 
 # ── Graph 1: Average fare by hour (line chart) ────────────────────────────────
@@ -38,6 +43,7 @@ sns.barplot(data=daily_avg, x="day_of_week", y="fare_amount", palette="Blues_d")
 plt.title("Average Uber Fare by Day of Week")
 plt.xlabel("Day of Week")
 plt.ylabel("Average Fare ($)")
+plt.ylim(15.5, 16.5)  # zooms in so the small differences between days are actually visible
 plt.tight_layout()
 plt.savefig("outputs/avg_price_by_day.png", dpi=150)
 plt.close()
@@ -48,6 +54,7 @@ plt.hist(df["fare_amount"].dropna(), bins=40, color="#E8704A", edgecolor="white"
 plt.title("Distribution of Uber Fares")
 plt.xlabel("Fare ($)")
 plt.ylabel("Count")
+plt.xlim(0, df["fare_amount"].quantile(0.99))  # cuts off the stretched empty space on the right
 plt.tight_layout()
 plt.savefig("outputs/price_distribution.png", dpi=150)
 plt.close()
